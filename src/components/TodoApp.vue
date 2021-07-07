@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <h2 class="text-center mt-5">First TO DO App</h2>
+    <h2 class="text-center mt-5">TO DO App</h2>
 
-    <div class="d-flex">
+    <div class="d-flex mt-5">
       <input v-model="task" type="text" placeholder="Enter task" class="form-control">
       <button @click="submitTask" class="btn btn-danger rounded-0">Add</button>
     </div>
@@ -75,7 +75,11 @@ export default {
   },
 
   created(){
-    this.tasks = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    fetch('http://localhost:8081/')
+    .then(response => response.json())
+    .then(data => {
+      this.tasks = data;
+    });
   },
 
   methods: {
@@ -87,19 +91,45 @@ export default {
         name: this.task,
         status: 'To-do'
       })
-      }else{
+
+      fetch('http://localhost:8081/addtask', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+           name: this.task
+        })
+      })
+
+      } else {
         this.tasks[this.editedTask].name = this.task;
+        console.log( 'index , task' , this.editedTask, this.task)
+        
+        fetch('http://localhost:8081/edittask', {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            index: this.editedTask,
+            name: this.task
+          })
+        });
+
         this.editedTask = null;
       }
       
-      this.task = '';
-
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tasks));
+      this.task = '';      
     },
 
     deleteTask(index){
       this.tasks.splice(index, 1);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tasks));
+      
+      fetch('http://localhost:8081/deletetask', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          index: index
+        })
+      });
+
     },
 
     editTask(index){
@@ -112,6 +142,16 @@ export default {
       let newIndex = this.availableStatus.indexOf(this.tasks[index].status);
       if(++newIndex > 1) newIndex = 0;
       this.tasks[index].status = this.availableStatus[newIndex];
+
+      fetch('http://localhost:8081/editstatus', {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            index: index,
+            status: this.availableStatus[newIndex]
+          })
+        });
+
     }
   }
 
