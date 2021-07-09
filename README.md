@@ -4,7 +4,7 @@
 ```
 npm install
 
-Also clone __ToDo_Server__ repository and run that before proceeding.
+Also clone **ToDo_Server** repository and run that before proceeding.
 ```
 
 
