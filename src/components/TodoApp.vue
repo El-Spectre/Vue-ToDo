@@ -51,8 +51,6 @@
 
 <script>
 
-const STORAGE_KEY = 'todo-storage';
-
 export default {
   name: 'HelloWorld',
   props: {
@@ -67,20 +65,20 @@ export default {
 
       tasks: [
         {
-          name: 'This is an example task, you can delete this if you want!!',
+          name: 'This is an example task, you can delete and edit this task!',
           status: 'To-do'
         }
       ]
     }
   },
 
-  created(){
-    fetch('http://localhost:8081/')
-    .then(response => response.json())
-    .then(data => {
-      this.tasks = data;
-    });
-  },
+  mounted(){
+      fetch('http://localhost:8081/')
+      .then(response => response.json())
+      .then(data => {
+        this.tasks = data;
+      });
+    },
 
   methods: {
     submitTask(){
@@ -135,7 +133,6 @@ export default {
     editTask(index){
       this.task = this.tasks[index].name;
       this.editedTask = index;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.tasks));
     },
 
     changeStatus(index){
