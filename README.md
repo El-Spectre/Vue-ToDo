@@ -3,8 +3,10 @@
 ## Project setup
 ```
 npm install
-```
+
 Also clone todo-list_server repository and run that before proceeding.
+```
+
 
 ### Compiles and hot-reloads for development
 ```
